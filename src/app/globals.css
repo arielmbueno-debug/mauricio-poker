@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    background-color: #0a0d12;
+    color: #e6edf3;
+    font-feature-settings: "tnum" 1, "cv11" 1;
+  }
+
+  *,
+  *::before,
+  *::after {
+    @apply border-border;
+  }
+
+  /* Tabular numbers everywhere */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-bg-panel border border-border rounded;
+  }
+
+  .panel-elev {
+    @apply bg-bg-elev border border-border rounded;
+  }
+
+  .stat-label {
+    @apply text-2xs uppercase tracking-wider text-fg-muted font-medium;
+  }
+
+  .stat-value {
+    @apply text-2xl font-semibold text-fg-primary tabular tracking-tight;
+  }
+
+  .stat-delta-up {
+    @apply text-positive text-xs tabular;
+  }
+
+  .stat-delta-down {
+    @apply text-negative text-xs tabular;
+  }
+
+  .divider {
+    @apply border-t border-border;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-2xs font-medium border;
+  }
+
+  .table-row {
+    @apply border-b border-border hover:bg-bg-hover transition-colors;
+  }
+
+  .input {
+    @apply bg-bg-elev border border-border rounded px-2 py-1.5 text-xs text-fg-primary
+           focus:outline-none focus:border-accent transition-colors min-w-0;
+  }
+}
+
+/* Recharts overrides for dark theme */
+.recharts-cartesian-grid line {
+  stroke: #1f2731;
+}
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: #141a22 !important;
+  border-color: #2a3340 !important;
+  color: #e6edf3 !important;
+}
+.recharts-text {
+  fill: #6b7785;
+}

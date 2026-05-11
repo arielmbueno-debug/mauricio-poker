@@ -1,0 +1,52 @@
+// Poker Decisions — Prisma schema
+// Single-user local SQLite. Tournament + Transaction (deposits/withdrawals).
+// Bankroll is computed: sum(deposits) - sum(withdrawals) + sum(tournament.profit)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Tournament {
+  id           String   @id @default(cuid())
+  playedAt     DateTime
+  site         String   // PokerSite enum value (kept as string for SQLite portability)
+  buyIn        Float    // initial buy-in in USD
+  reEntries    Int      @default(0)
+  addOns       Int      @default(0)
+  isTurbo      Boolean  @default(false)
+  isBounty     Boolean  @default(false)
+  itm          Boolean  @default(false)
+  finalTablePosition Int? // null unless reached FT
+  fieldSize    Int?     // optional — improves recommendations when present
+  profit       Float    // net profit/loss (lucro bruto final)
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([playedAt])
+  @@index([site])
+  @@index([buyIn])
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  kind      String   // 'deposit' | 'withdrawal'
+  amount    Float    // positive USD
+  occurredAt DateTime @default(now())
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([occurredAt])
+}
+
+model Settings {
+  id              String  @id @default("singleton")
+  riskProfile     String  @default("moderate") // 'conservative' | 'moderate' | 'aggressive'
+  defaultCurrency String  @default("USD")
+  updatedAt       DateTime @updatedAt
+}
